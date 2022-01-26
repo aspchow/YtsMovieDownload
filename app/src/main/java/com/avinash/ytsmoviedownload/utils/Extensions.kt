@@ -49,16 +49,17 @@ suspend fun HttpClient.downloadFile(file: File, url: String): Flow<DownloadState
     return flow {
         val response: HttpResponse = request {
             headers {
-                append(HttpHeaders.Accept, "application/octet-stream")
+                append(HttpHeaders.Cookie,"PHPSESSID=c0bcsrs7ou0gubfgtpcacjtjlq")
+                append(HttpHeaders.Accept, "*/*")
                 append(HttpHeaders.Connection, "keep-alive")
                 append(HttpHeaders.AcceptEncoding, "gzip, deflate, br")
                 append(HttpHeaders.ContentType, "application/vnd.api+json")
-                append(HttpHeaders.UserAgent, "Ktor client")
+                append(HttpHeaders.UserAgent, "PostmanRuntime/7.29.0")
             }
             url(url)
             method = HttpMethod.Get
         }
-        val data = ByteArray(response.contentLength()!!.toInt())
+        val data = ByteArray(response.content.availableForRead)
         var offset = 0
         do {
             val currentRead = response.content.readAvailable(data, offset, data.size)

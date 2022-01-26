@@ -33,10 +33,12 @@ class YtsViewModel(val repository: Repository) : ViewModel() {
         .distinctUntilChanged()
         .flatMapLatest { searchContent ->
             if (this::downloadMoviesJob.isInitialized) {
+                moviesSearchProgress.value = ApiState.Cancelled
                 downloadMoviesJob.cancel()
             }
            if(searchContent.isNotEmpty()){
                downloadMoviesJob = viewModelScope.launch(Dispatchers.IO) {
+                   moviesSearchProgress.value = ApiState.InProgress
                    repository.getMoviesFromServer(query = searchContent).collect { apiState ->
                        moviesSearchProgress.value = apiState
                    }

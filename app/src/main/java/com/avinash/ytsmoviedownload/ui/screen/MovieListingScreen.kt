@@ -10,10 +10,12 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import coil.compose.rememberImagePainter
+import com.avinash.ytsmoviedownload.repository.ApiState
 import com.avinash.ytsmoviedownload.repository.local.database.model.Movie
 import com.avinash.ytsmoviedownload.ui.screen.destinations.MovieDetailsScreenDestination
 import com.avinash.ytsmoviedownload.ui.theme.YtsViewModel
@@ -50,10 +53,10 @@ fun MoviesListingScreen(navigator: DestinationsNavigator) {
 
     val searchContent by viewmodel.searchContent.collectAsState()
 
-    val moviesSearchProgress by viewmodel.moviesSearchProgress.collectAsState()
+    val moviesSearchProgress: ApiState by viewmodel.moviesSearchProgress.collectAsState()
 
     Column {
-        SearchBox(value = searchContent) { searchContent ->
+        SearchBox(value = searchContent, searchState = moviesSearchProgress) { searchContent ->
             viewmodel.setSearch(searchContent = searchContent)
         }
         LazyVerticalGrid(cells = GridCells.Adaptive(154.dp)) {
@@ -68,7 +71,7 @@ fun MoviesListingScreen(navigator: DestinationsNavigator) {
 
 
 @Composable
-fun SearchBox(value: String, onValueChange: (String) -> Unit) {
+fun SearchBox(value: String, searchState: ApiState, onValueChange: (String) -> Unit) {
 
     Column(
         Modifier
@@ -90,20 +93,52 @@ fun SearchBox(value: String, onValueChange: (String) -> Unit) {
                 .clip(RoundedCornerShape(24.dp))
                 .background(Color(0xFF211F30).copy(alpha = 0.5f))
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Icon(Icons.Outlined.Search, contentDescription = null, tint = Color.White)
+            Row {
+                Icon(
+                    Icons.Outlined.Search,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
 
-            Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
-            BasicTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = value,
-                onValueChange = onValueChange,
-                textStyle = MaterialTheme.typography.h2.copy(color = Color(0xFFBBBBBB))
-            )
+                BasicTextField(
+                    modifier = Modifier,
+                    value = value,
+                    onValueChange = onValueChange,
+                    textStyle = MaterialTheme.typography.h2.copy(color = Color(0xFFBBBBBB))
+                )
+
+            }
+
+            Row {
+                if (searchState == ApiState.InProgress)
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+
+                if (value.isNotEmpty()) {
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Icon(
+                        Icons.Outlined.Clear,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable {
+                                onValueChange("")
+                            })
+                }
+            }
         }
     }
 }

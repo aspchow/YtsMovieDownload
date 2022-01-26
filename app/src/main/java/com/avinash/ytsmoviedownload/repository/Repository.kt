@@ -81,5 +81,6 @@ class Repository(
 sealed class ApiState {
     object Success : ApiState()
     object InProgress : ApiState()
+    object Cancelled : ApiState()
     class Failure(val exception: Throwable) : ApiState()
 }
