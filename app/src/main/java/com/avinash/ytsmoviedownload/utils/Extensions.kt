@@ -59,7 +59,7 @@ suspend fun HttpClient.downloadFile(file: File, url: String): Flow<DownloadState
             url(url)
             method = HttpMethod.Get
         }
-        val data = ByteArray(response.content.availableForRead)
+        val data = ByteArray(response.contentLength()?.toInt() ?: response.content.availableForRead)
         var offset = 0
         do {
             val currentRead = response.content.readAvailable(data, offset, data.size)
