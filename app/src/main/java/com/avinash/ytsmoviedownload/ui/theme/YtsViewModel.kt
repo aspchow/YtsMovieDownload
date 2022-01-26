@@ -7,6 +7,7 @@ import com.avinash.ytsmoviedownload.repository.local.database.model.Torrent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import java.io.File
 
 class YtsViewModel(val repository: Repository) : ViewModel() {
 
@@ -18,12 +19,9 @@ class YtsViewModel(val repository: Repository) : ViewModel() {
 
     private var _selectedMovie : Movie? = null
 
-    fun getSelectedMovie(): Movie = _selectedMovie!!
-    fun setSelectedMovie(movie: Movie){
-        _selectedMovie = movie
-    }
-
     fun getTorrents(movieId: Int) : Flow<List<Torrent>> = repository.getTorrents(movieId = movieId)
+
+    suspend fun downloadFile(file: File, url: String) = repository.downloadFile(file, url)
 
     val movies: Flow<List<Movie>> = searchContent.flatMapLatest { searchContent ->
         repository.getMoviesLike(searchContent)

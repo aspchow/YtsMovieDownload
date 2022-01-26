@@ -16,18 +16,22 @@ import com.avinash.ytsmoviedownload.repository.ApiState
 import com.avinash.ytsmoviedownload.repository.Repository
 import com.avinash.ytsmoviedownload.ui.screen.AppNavigation
 import com.avinash.ytsmoviedownload.ui.theme.YtsMovieDownloadTheme
+import com.avinash.ytsmoviedownload.utils.globalActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.core.annotation.KoinInternalApi
 
 class MainActivity : ComponentActivity() {
 
     private val repository: Repository by inject()
 
+    @KoinInternalApi
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        globalActivity = this
         setContent {
 
             val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
@@ -51,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     color = Color(0xFF15141F),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                   AppNavigation()
+                    AppNavigation()
                 }
             }
         }

@@ -1,5 +1,8 @@
 package com.avinash.ytsmoviedownload.di
 
+import android.app.DownloadManager
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import androidx.room.Room
 import com.avinash.ytsmoviedownload.repository.MovieMapper
 import com.avinash.ytsmoviedownload.repository.remote.RemoteRepository
@@ -23,7 +26,8 @@ val appModule = module {
     }
 
     single {
-        Room.databaseBuilder(get(), YtsMovieDatabase::class.java, "yts_app_database").build().getMoviesDao()
+        Room.databaseBuilder(get(), YtsMovieDatabase::class.java, "yts_app_database").build()
+            .getMoviesDao()
     }
 
     single {
@@ -39,8 +43,12 @@ val appModule = module {
         RemoteRepository(get())
     }
 
-    viewModel {
+    single {
         YtsViewModel(get())
+    }
+
+    single {
+        get<Context>().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     }
 
 }

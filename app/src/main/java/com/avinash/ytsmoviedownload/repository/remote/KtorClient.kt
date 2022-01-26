@@ -2,7 +2,7 @@ package com.avinash.ytsmoviedownload.repository.remote
 
 import android.util.Log
 import com.avinash.ytsmoviedownload.repository.local.database.model.ApiResponse
-import com.avinash.ytsmoviedownload.repository.remote.model.MovieFromApi
+import com.avinash.ytsmoviedownload.utils.downloadFile
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
@@ -15,7 +15,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.retryWhen
+import java.io.File
 import java.lang.StringBuilder
 
 
@@ -80,12 +80,22 @@ class ApiUtility {
         append("&$param").append("=$value")
     }
 
-    infix fun StringBuilder.param(param: String): StringBuilder {
+    suspend fun downloadFile(file: File, url: String): Flow<DownloadState> = ktorHttpClient.downloadFile(file = file, url = url)
 
-        return this
-    }
 
-    infix fun StringBuilder.value(value: String) {
+//    fun downloadFile() = ktorHttpClient.downloadFile( )
 
-    }
 }
+
+
+sealed class DownloadState {
+
+    object Success : DownloadState()
+
+    object Pending : DownloadState()
+
+    data class Error(val message: String, val cause: Exception? = null) : DownloadState()
+
+    data class Progress(val progress: Int): DownloadState()
+}
+

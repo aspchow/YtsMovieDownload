@@ -52,7 +52,7 @@ class MovieMapper {
                         seeds = torrentFromApi.seeds,
                         size = torrentFromApi.size,
                         size_bytes = torrentFromApi.size_bytes,
-                        type = torrentFromApi.size,
+                        type = torrentFromApi.type,
                         url = torrentFromApi.url
                     )
                 )

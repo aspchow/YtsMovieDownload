@@ -3,7 +3,6 @@ package com.avinash.ytsmoviedownload.repository.local.database.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,19 +32,19 @@ data class Movie(
     val titleLong: String,
     val year: Int,
     val ytTrailerCode: String
-)
+): java.io.Serializable
 
 
 class StringToListConverter{
 
     @TypeConverter
     fun toListOfGenres(genres: String): List<String> {
-        return listOf()
+        return genres.split(",")
     }
 
     @TypeConverter
     fun toStringOfGenres(genres: List<String>): String {
-        return ""
+        return genres.joinToString(",")
     }
 
 

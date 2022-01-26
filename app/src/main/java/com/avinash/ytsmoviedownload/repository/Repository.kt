@@ -6,6 +6,7 @@ import com.avinash.ytsmoviedownload.repository.remote.RemoteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import java.io.File
 import java.lang.Exception
 
 class Repository(
@@ -39,6 +40,8 @@ class Repository(
     }
 
     fun getTorrents(movieId: Int): Flow<List<Torrent>> = localRepository.getTorrents(movieId = movieId)
+
+    suspend fun downloadFile(file: File, url: String) = remoteRepository.downloadFile(file, url)
 }
 
 

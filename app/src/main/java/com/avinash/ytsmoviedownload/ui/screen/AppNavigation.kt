@@ -8,32 +8,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.avinash.ytsmoviedownload.ui.theme.YtsViewModel
+import com.ramcosta.composedestinations.DestinationsNavHost
 import org.koin.androidx.compose.inject
 import org.koin.androidx.compose.viewModel
+import org.koin.core.annotation.KoinInternalApi
 
+@KoinInternalApi
 @ExperimentalFoundationApi
 @Composable
 fun AppNavigation() {
-    val navController = rememberNavController()
-
-    val viewModel : YtsViewModel by viewModel()
-
-    NavHost(navController = navController, startDestination = NavConstant.Screen.MOVIES_LISTING) {
-
-        composable(route = NavConstant.Screen.MOVIES_LISTING) {
-            MoviesListingScreen(viewModel = viewModel, navController = navController)
-        }
-
-        composable(
-            route = "${NavConstant.Screen.MOVIE_DETAILS}?${NavConstant.Args.Movie_ID}={${NavConstant.Args.Movie_ID}}",
-            arguments = listOf(navArgument(NavConstant.Args.Movie_ID) {
-                type = NavType.IntType
-            })
-        ) { backStack ->
-            val movieId = backStack.arguments?.getInt(NavConstant.Args.Movie_ID) ?: -1
-            MovieDetailsScreen(viewModel = viewModel)
-        }
-    }
+    DestinationsNavHost(navGraph = NavGraphs.root)
 }
 
 

@@ -30,11 +30,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.avinash.ytsmoviedownload.repository.local.database.model.Movie
+import com.avinash.ytsmoviedownload.ui.screen.destinations.MovieDetailsScreenDestination
 import com.avinash.ytsmoviedownload.ui.theme.YtsViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.get
+import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.viewModel
+import org.koin.core.annotation.KoinInternalApi
 
+@KoinInternalApi
 @ExperimentalFoundationApi
+@Destination(route = NavConstant.Screen.MOVIES_LISTING, start = true)
 @Composable
-fun MoviesListingScreen(viewModel: YtsViewModel,navController: NavController) {
+fun MoviesListingScreen(navigator: DestinationsNavigator) {
+
+    val viewModel: YtsViewModel = get()
 
     val movies: List<Movie> by viewModel.movies.collectAsState(initial = emptyList())
 
@@ -46,9 +57,8 @@ fun MoviesListingScreen(viewModel: YtsViewModel,navController: NavController) {
         }
         LazyVerticalGrid(cells = GridCells.Adaptive(154.dp)) {
             items(movies) { movie ->
-                MovieItem(movie = movie) { movie ->
-                    viewModel.setSelectedMovie(movie = movie)
-                    navController.navigate("${NavConstant.Screen.MOVIE_DETAILS}?${NavConstant.Args.Movie_ID}=${movie.id}")
+                MovieItem(movie = movie) { selectedMovie ->
+                    navigator.navigate(MovieDetailsScreenDestination(movie = selectedMovie))
                 }
             }
         }
