@@ -27,16 +27,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewModelScope
 import coil.compose.rememberImagePainter
 import com.avinash.ytsmoviedownload.repository.local.database.model.Movie
 import com.avinash.ytsmoviedownload.ui.screen.destinations.MovieDetailsScreenDestination
 import com.avinash.ytsmoviedownload.ui.theme.YtsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
-import org.koin.androidx.compose.getViewModel
-import org.koin.androidx.compose.viewModel
 import org.koin.core.annotation.KoinInternalApi
 
 @KoinInternalApi
@@ -45,15 +44,17 @@ import org.koin.core.annotation.KoinInternalApi
 @Composable
 fun MoviesListingScreen(navigator: DestinationsNavigator) {
 
-    val viewModel: YtsViewModel = get()
+    val viewmodel: YtsViewModel = get()
 
-    val movies: List<Movie> by viewModel.movies.collectAsState(initial = emptyList())
+    val movies: List<Movie> by viewmodel.movies.collectAsState(initial = emptyList())
 
-    val searchContent by viewModel.searchContent.collectAsState()
+    val searchContent by viewmodel.searchContent.collectAsState()
+
+    val moviesSearchProgress by viewmodel.moviesSearchProgress.collectAsState()
 
     Column {
         SearchBox(value = searchContent) { searchContent ->
-            viewModel.setSearch(searchContent)
+            viewmodel.setSearch(searchContent = searchContent)
         }
         LazyVerticalGrid(cells = GridCells.Adaptive(154.dp)) {
             items(movies) { movie ->

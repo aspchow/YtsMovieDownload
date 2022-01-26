@@ -95,7 +95,7 @@ fun MovieDetailsScreen(movie: Movie) {
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                 ) {
-                    torrents.sortedByDescending { it.size_bytes }.forEach { torrent ->
+                    torrents.forEach { torrent ->
 
                         var downloadState by remember { mutableStateOf(if (torrent.file.exists()) DownloadState.Success else DownloadState.Pending) }
 

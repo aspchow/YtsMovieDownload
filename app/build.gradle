@@ -76,6 +76,9 @@ dependencies {
     implementation "io.ktor:ktor-client-serialization:$ktor_version"
     implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
     implementation "org.slf4j:slf4j-simple:1.7.30"
+    implementation("io.ktor:ktor-client-core")
+    implementation("io.ktor:ktor-client-logging-jvm")
+
 
     //serialization
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2'

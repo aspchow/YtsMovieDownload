@@ -22,7 +22,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.annotation.KoinInternalApi
 import org.koin.core.context.GlobalContext
 import java.io.File
-import java.lang.NullPointerException
 import kotlin.math.roundToInt
 
 
@@ -49,6 +48,13 @@ suspend fun HttpClient.downloadFile(
 suspend fun HttpClient.downloadFile(file: File, url: String): Flow<DownloadState> {
     return flow {
         val response: HttpResponse = request {
+            headers {
+                append(HttpHeaders.Accept, "application/octet-stream")
+                append(HttpHeaders.Connection, "keep-alive")
+                append(HttpHeaders.AcceptEncoding, "gzip, deflate, br")
+                append(HttpHeaders.ContentType, "application/vnd.api+json")
+                append(HttpHeaders.UserAgent, "Ktor client")
+            }
             url(url)
             method = HttpMethod.Get
         }

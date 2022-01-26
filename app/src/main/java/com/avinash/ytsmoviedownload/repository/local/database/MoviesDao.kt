@@ -18,7 +18,7 @@ interface MoviesDao {
     fun getMovies() : Flow<List<Movie>>
 
 
-    @Query("SELECT * FROM Movie WHERE title LIKE '%' || :searchQuery || '%'")
+    @Query("SELECT * FROM Movie WHERE title LIKE '%' || :searchQuery || '%' ORDER BY dateUploadedUnix DESC")
     fun getMoviesLike(searchQuery : String) : Flow<List<Movie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -27,6 +27,6 @@ interface MoviesDao {
     @Delete
    suspend fun deleteTorrents(torrents: List<Torrent>)
 
-    @Query("SELECT * FROM Torrent WHERE movieId = :movieId")
+    @Query("SELECT * FROM Torrent WHERE movieId = :movieId ORDER BY size_bytes DESC")
     fun getMovieTorrents(movieId : Int) : Flow<List<Torrent>>
 }
