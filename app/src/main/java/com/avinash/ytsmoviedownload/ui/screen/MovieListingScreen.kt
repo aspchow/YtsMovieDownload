@@ -1,5 +1,6 @@
 package com.avinash.ytsmoviedownload.ui.screen
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -60,7 +61,7 @@ fun MoviesListingScreen(navigator: DestinationsNavigator) {
         SearchBox(value = searchContent, searchState = moviesSearchProgress) { searchContent ->
             viewmodel.setSearch(searchContent = searchContent)
         }
-        LazyVerticalGrid(cells = GridCells.Adaptive(154.dp)) {
+        LazyVerticalGrid(cells = GridCells.Adaptive(154.dp), modifier = Modifier.animateContentSize()) {
             items(movies) { movie ->
                 MovieItem(movie = movie) { selectedMovie ->
                     navigator.navigate(MovieDetailsScreenDestination(movie = selectedMovie))
