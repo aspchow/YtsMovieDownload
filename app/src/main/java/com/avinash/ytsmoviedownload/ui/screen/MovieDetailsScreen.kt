@@ -49,7 +49,7 @@ fun MovieDetailsScreen(movie: Movie) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val torrents by viewModel.getTorrents(movieId = movie.id).collectAsState(initial = emptyList())
+    val torrents by viewModel.getTorrents(movieId = movie.id).collectAsState(initial = emptyList(),Dispatchers.IO)
 
     val scrollableState = rememberScrollState()
 

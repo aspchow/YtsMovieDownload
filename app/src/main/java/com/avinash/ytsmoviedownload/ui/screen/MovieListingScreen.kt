@@ -37,6 +37,7 @@ import com.avinash.ytsmoviedownload.ui.screen.destinations.MovieDetailsScreenDes
 import com.avinash.ytsmoviedownload.ui.theme.YtsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import org.koin.core.annotation.KoinInternalApi
@@ -49,11 +50,11 @@ fun MoviesListingScreen(navigator: DestinationsNavigator) {
 
     val viewmodel: YtsViewModel = get()
 
-    val movies: List<Movie> by viewmodel.movies.collectAsState(initial = emptyList())
+    val movies: List<Movie> by viewmodel.movies.collectAsState(initial = emptyList(),Dispatchers.IO)
 
-    val searchContent by viewmodel.searchContent.collectAsState()
+    val searchContent by viewmodel.searchContent.collectAsState(Dispatchers.IO)
 
-    val moviesSearchProgress: ApiState by viewmodel.moviesSearchProgress.collectAsState()
+    val moviesSearchProgress: ApiState by viewmodel.moviesSearchProgress.collectAsState(Dispatchers.IO)
 
     Column {
         SearchBox(value = searchContent, searchState = moviesSearchProgress) { searchContent ->
